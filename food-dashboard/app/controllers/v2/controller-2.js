@@ -1,6 +1,16 @@
-export let renderFoodList = (foodArr) => {
+import { Food2 } from "../../models/v2/model2.js";
+
+export let renderFoodList = (value) => {
+  let footArr = value.map((item) => {
+    // destructuring
+    let { name, type, discount, img, desc, price, status, id } = item;
+    // new object
+    let food = new Food2(id, name, type, discount, img, desc, price, status);
+    return food;
+  });
+
   let contentHTML = "";
-  foodArr.forEach((item) => {
+  footArr.forEach((item) => {
     let { id, name, type, discount, price, status } = item;
     let contentTr = `<tr>
     <td>${id}</td>
@@ -9,7 +19,7 @@ export let renderFoodList = (foodArr) => {
     <td>${price}</td>
     <td>${discount}</td>
     <td>${item.calculateDiscount()}</td>
-    <td>${item.status ? "Còn" : "Hết"}</td>
+    <td>${status ? "Còn" : "Hết"}</td>
     <td>
     <button onclick="sua(${id})" class="btn btn-warning">Sửa</button>
     <button onclick="xoa(${id})" class="btn btn-primary">Xóa</button>

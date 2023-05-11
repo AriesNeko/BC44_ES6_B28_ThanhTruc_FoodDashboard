@@ -1,4 +1,3 @@
-import { Food2 } from "../../models/v2/model2.js";
 import { renderFoodList, getInfoFromForm } from "./controller-2.js";
 
 const BASE_URL = "https://64561e0f2e41ccf169141804.mockapi.io/food";
@@ -9,23 +8,8 @@ let fetchFoodList = () => {
     method: "GET",
   })
     .then((res) => {
-      let footArr = res.data.map((item) => {
-        // destructuring
-        let { name, type, discount, img, desc, price, status, id } = item;
-        // new object
-        let food = new Food2(
-          id,
-          name,
-          type,
-          discount,
-          img,
-          status,
-          price,
-          desc
-        );
-        return food;
-      });
-      renderFoodList(footArr);
+      $("#exampleModal").modal("hide");
+      renderFoodList(res.data);
     })
     .catch((err) => {
       console.log("err: ", err);
@@ -59,7 +43,6 @@ window.themMon = () => {
     data: data,
   })
     .then((res) => {
-      $("#exampleModal").modal("hide");
       console.log("res: ", res);
       fetchFoodList();
     })
@@ -93,20 +76,31 @@ window.sua = (id) => {
 };
 
 // Update
-let capNhat = (id) => {
-  axios({
+let capNhat = async () => {
+  const id = document.querySelector("#foodID").value;
+  console.log(id);
+  let data = getInfoFromForm();
+
+  await axios({
     url: `${BASE_URL}/${id}`,
     method: "PUT",
-  })
-    .then((res) => {
-      let footArr = res.data.map((item) => {
-        return item.id == res.id;
-      });
-      $("#exampleModal").modal("hide");
-      renderFoodList(footArr);
-    })
-    .catch((err) => {
-      console.log("err: ", err);
-    });
+    data: data,
+  });
+
+  fetchFoodList();
+
+  // gửi yêu cầu cập nhật lên sever
+  // axios({
+  //   url: `${BASE_URL}/${id}`,
+  //   method: "PUT",
+  //   data: data,
+  // })
+  //   .then((res) => {
+  //     // gửi yêu cầu lấy tất cả data ở sever
+  //     fetchFoodList();
+  //   })
+  //   .catch((err) => {
+  //     console.log("err: ", err);
+  //   });
 };
 window.capNhat = capNhat;
