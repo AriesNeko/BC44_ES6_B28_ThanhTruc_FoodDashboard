@@ -78,7 +78,6 @@ window.sua = (id) => {
 // Update
 let capNhat = async () => {
   const id = document.querySelector("#foodID").value;
-  console.log(id);
   let data = getInfoFromForm();
 
   await axios({
