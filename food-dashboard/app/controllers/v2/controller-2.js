@@ -10,12 +10,13 @@ export let renderFoodList = (value) => {
   });
 
   let contentHTML = "";
+
   footArr.forEach((item) => {
     let { id, name, type, discount, price, status } = item;
     let contentTr = `<tr>
     <td>${id}</td>
     <td>${name}</td>
-    <td>${type ? "chay" : "mặn"}</td>
+    <td>${type === "loai1" ? "chay" : "mặn"}</td>
     <td>${price}</td>
     <td>${discount}</td>
     <td>${item.calculateDiscount()}</td>

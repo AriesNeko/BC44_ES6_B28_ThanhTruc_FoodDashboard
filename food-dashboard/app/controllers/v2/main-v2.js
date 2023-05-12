@@ -1,6 +1,7 @@
 import { renderFoodList, getInfoFromForm } from "./controller-2.js";
 
 const BASE_URL = "https://64561e0f2e41ccf169141804.mockapi.io/food";
+let arrData = [];
 
 let fetchFoodList = () => {
   axios({
@@ -9,14 +10,16 @@ let fetchFoodList = () => {
   })
     .then((res) => {
       $("#exampleModal").modal("hide");
-      renderFoodList(res.data);
+      arrData = res.data;
+      console.log(arrData);
+      renderFoodList(arrData);
     })
     .catch((err) => {
       console.log("err: ", err);
     });
 };
 
-// Xóa Món Ăn
+// Delete
 let xoa = (id) => {
   axios({
     url: `${BASE_URL}/${id}`,
@@ -33,7 +36,7 @@ window.xoa = xoa;
 
 fetchFoodList();
 
-// Thêm Món Ăn
+// Add
 window.themMon = () => {
   let data = getInfoFromForm();
   console.log("data: ", data);
@@ -51,6 +54,7 @@ window.themMon = () => {
     });
 };
 
+// Edit
 window.sua = (id) => {
   axios({
     url: `${BASE_URL}/${id}`,
@@ -87,19 +91,46 @@ let capNhat = async () => {
   });
 
   fetchFoodList();
-
-  // gửi yêu cầu cập nhật lên sever
-  // axios({
-  //   url: `${BASE_URL}/${id}`,
-  //   method: "PUT",
-  //   data: data,
-  // })
-  //   .then((res) => {
-  //     // gửi yêu cầu lấy tất cả data ở sever
-  //     fetchFoodList();
-  //   })
-  //   .catch((err) => {
-  //     console.log("err: ", err);
-  //   });
 };
 window.capNhat = capNhat;
+
+// Xử lý filter Loại món ăn
+document.querySelector("#selLoai").addEventListener("change", function (event) {
+  // console.log(event);
+  const value = event.target.value;
+
+  if (value === "all" || value === "Chọn loại") {
+    renderFoodList(arrData);
+    return;
+  }
+
+  const result = arrData.filter(function (item) {
+    if (item.type === value) {
+      return true;
+    }
+  });
+
+  renderFoodList(result);
+});
+
+// search tên món ăn
+document
+  .querySelector("#input_search")
+  .addEventListener("keydown", async (event) => {
+    // console.log(event);
+    if (event.key === "Enter") {
+      const value = document.querySelector("#input_search").value;
+      // console.log(value);
+      const result = await searchByName(value);
+      // console.log(result);
+      renderFoodList(result.data);
+    }
+  });
+
+function searchByName(name) {
+  return axios.get(BASE_URL, {
+    params: {
+      name: name,
+    },
+  });
+}
