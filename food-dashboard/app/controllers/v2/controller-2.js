@@ -20,7 +20,7 @@ export let renderFoodList = (value) => {
     <td>${price}</td>
     <td>${discount}</td>
     <td>${item.calculateDiscount()}</td>
-    <td>${status ? "Còn" : "Hết"}</td>
+    <td>${status === "1" ? "Còn" : "Hết"}</td>
     <td>
     <button onclick="sua(${id})" class="btn btn-warning">Sửa</button>
     <button onclick="xoa(${id})" class="btn btn-primary">Xóa</button>
